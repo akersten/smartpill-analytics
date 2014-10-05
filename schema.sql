@@ -24,8 +24,8 @@ DROP TABLE IF EXISTS careRelations;
 CREATE TABLE careRelations (
     caregiverId INTEGER NOT NULL,
     patientId INTEGER NOT NULL,
-    FOREIGN KEY(caregiverId) REFERENCES (accounts),
-    FOREIGN KEY(patientId) REFERENCES (accounts)
+    FOREIGN KEY(caregiverId) REFERENCES accounts(id),
+    FOREIGN KEY(patientId) REFERENCES accounts(id)
 );
 
 -- Each patient has one or more prescriptions that must be adhered to.
@@ -42,7 +42,7 @@ CREATE TABLE prescriptions (
     start INTEGER NOT NULL,
     end INTEGER,
     schedule INTEGER NOT NULL,
-    FOREIGN KEY(patient) REFERENCES (accounts)
+    FOREIGN KEY(patient) REFERENCES accounts(id)
 );
 
 -- Keep track of when patients take dosages of the medication. Each dose event is a separate row in this table.
@@ -55,5 +55,5 @@ CREATE TABLE doses (
     id INTEGER PRIMARY KEY,
     prescriptionId INTEGER NOT NULL,
     time INTEGER NOT NULL,
-    FOREIGN KEY(prescriptionId) REFERENCES (prescriptions)
+    FOREIGN KEY(prescriptionId) REFERENCES prescriptions(id)
 );
