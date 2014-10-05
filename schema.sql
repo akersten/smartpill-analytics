@@ -45,3 +45,15 @@ CREATE TABLE prescriptions (
     FOREIGN KEY(patient) REFERENCES (accounts)
 );
 
+-- Keep track of when patients take dosages of the medication. Each dose event is a separate row in this table.
+DROP TABLE IF EXISTS doses;
+
+-- id: Automatic primary key
+-- prescriptionId: The ID of the prescription from the `prescriptions` table
+-- time: What time (unix timestamp) the patient took the dose
+CREATE TABLE doses (
+    id INTEGER PRIMARY KEY,
+    prescriptionId INTEGER NOT NULL,
+    time INTEGER NOT NULL,
+    FOREIGN KEY(prescriptionId) REFERENCES (prescriptions)
+);
