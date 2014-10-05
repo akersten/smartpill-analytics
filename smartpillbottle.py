@@ -50,6 +50,14 @@ def teardown_request(exception):
 # Default route
 #
 @app.route('/')
+def log_in():
+
+
+
+#
+# Show users
+#
+@app.route('/show_users')
 def show_users():
     cur = g.db.execute('SELECT type, name FROM accounts')
     entries = [dict(type=row[0], name=row[1]) for row in cur.fetchall()]
