@@ -28,3 +28,20 @@ CREATE TABLE careRelations (
     FOREIGN KEY(patientId) REFERENCES (accounts)
 );
 
+-- Each patient has one or more prescriptions that must be adhered to.
+DROP TABLE IF EXISTS prescriptions;
+
+-- id: Automatic primary key
+-- patient: The ID of the patient from the `accounts` table
+-- start: The unix timestamp when the prescription begins
+-- end: The unix timestamp when the prescription ends (if not specified, the prescription is considered indefinite)
+-- schedule: How often the dosage needs to happen (in unix time intervals from the time specified by `start`)
+CREATE TABLE prescriptions (
+    id INTEGER PRIMARY KEY,
+    patient INTEGER NOT NULL,
+    start INTEGER NOT NULL,
+    end INTEGER,
+    schedule INTEGER NOT NULL,
+    FOREIGN KEY(patient) REFERENCES (accounts)
+);
+
