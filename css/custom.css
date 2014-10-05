@@ -1,0 +1,10 @@
+/**
+ * Custom rules on top of Bootstrap
+ */
+
+/**
+ * Not really centered, but just set down a little from the top.
+ */
+.vcenter {
+    margin-top: 8em;
+}
