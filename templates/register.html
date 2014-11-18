@@ -4,9 +4,10 @@
     <div class="row">
         <div class="col-sm-offset-3 col-sm-6 vcenter">
             <div style="text-align: center;">
-                <img src="{{ url_for('static', filename='img/smartpill-logo.png') }}" alt="Smartpill" />
+                <img src="{{ url_for('static', filename='img/smartpill-logo.png') }}" alt="Smartpill"/>
             </div>
-            <h2>Authenticate</h2>
+            <h2>Register Account</h2>
+
             <form role="form">
                 <div class="form-group">
                     <label for="emailInput">Account</label>
@@ -16,8 +17,19 @@
                     <label for="passwordInput">Password</label>
                     <input type="password" class="form-control" id="passwordInput" placeholder="Password">
                 </div>
-                <button type="submit" class="btn btn-danger btn-block">Log in</button>
-                <a href="/register" class="btn btn-block custom">Register</a>
+                <div class="form-group">
+                    <label>
+                        <input type="radio" name="typeRadios" id="patientRadio" value="patient">
+                        Patient
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="radio" name="typeRadios" id="caregiverRadio" value="caregiver">
+                        Caregiver
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-block">Register</button>
             </form>
         </div>
     </div>
