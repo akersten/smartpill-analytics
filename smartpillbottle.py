@@ -29,6 +29,7 @@ def init_db():
             db.cursor().executescript(f.read())
         db.commit()
 
+
 # Set up database scaffolding for requests
 @app.before_request
 def before_request():
@@ -50,8 +51,11 @@ def teardown_request(exception):
 # Default route
 #
 @app.route('/')
-def log_in():
-
+def checkLogin():
+    if session.get('logged_in'):
+        return redirect(url_for('dashboard'))
+    else:
+        return redirect(url_for('login'))
 
 
 #
@@ -63,6 +67,7 @@ def show_users():
     entries = [dict(type=row[0], name=row[1]) for row in cur.fetchall()]
     return render_template('show_users.html', entries=entries)
 
+
 #
 # Add users
 #
@@ -71,13 +76,15 @@ def add_user():
     if not session.get('logged_in'):
         abort(401)
     g.db.execute('INSERT INTO accounts (type, name, email, password) VALUES (?, ?, ?, ?)',
-                 [request.form['userType'], request.form['userName'], request.form['userEmail'], request.form['userPassword']])
+                 [request.form['userType'], request.form['userName'], request.form['userEmail'],
+                  request.form['userPassword']])
     g.db.commit()
     flash('User added.')
     return redirect(url_for('show_users'))
 
+
 #
-# Login method
+# Login
 #
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -93,6 +100,7 @@ def login():
             return redirect(url_for('show_users'))
     return render_template('login.html', error=error)
 
+
 #
 # Logout method
 #
@@ -100,6 +108,16 @@ def logout():
     session.pop('logged_in', None)
     flash('Logout successful')
     return redirect(url_for('login'))
+
+
+#
+# Register
+#
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    error = None
+    return render_template('register.html', error=error)
+
 
 if __name__ == '__main__':
     app.run()
