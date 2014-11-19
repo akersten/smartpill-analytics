@@ -1,7 +1,7 @@
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 from contextlib import closing
-
+import queries
 # ######################################################################################################################
 # Flask configuration and setup
 # ######################################################################################################################
@@ -90,10 +90,20 @@ def add_user():
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['emailInput'] != app.config['USERNAME']:
-            error = 'Bad username or password.'
-        elif request.form['passwordInput'] != app.config['PASSWORD']:
-            error = 'Bad username or password.'
+        email = request.form['emailInput']
+        password = request.form['passwordInput']
+
+        if email == '':
+            error = 'Please enter an account name.'
+        if password == '':
+            error = 'Please enter a password.'
+
+# TODO: Check email/password combo
+
+        if email != app.config['USERNAME']:
+            error = 'Bad account name or password.'
+        elif password != app.config['PASSWORD']:
+            error = 'Bad account name or password.'
         else:
             session['logged_in'] = True
             flash('Login successful.')
@@ -116,6 +126,27 @@ def logout():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     error = None
+    if request.method == 'POST':
+        email = request.form['emailInput']
+        password = request.form['passwordInput']
+        type = request.form['typeRadios']
+
+        if email == '':
+            error = 'Please enter an account name.'
+        if password == '':
+            error = 'Please enter a password.'
+        if type == '':
+            error = 'Please select an account type.'
+
+        # Check if this user already exists...
+        cur = g.db.execute(queries.SELECT_ACCOUNT_BY_EMAIL, email);
+        entries = [dict(type=row[0], name=row[1]) for row in cur.fetchall()]
+        if len(entries) > 0:
+            error = 'Account name already exists.'
+        else:
+            g.db.execute(queries.INSERT_ACCOUNT, "TODO", email, password, type)
+            flash("Account successfully registered.")
+            return redirect(url_for('login'))
     return render_template('register.html', error=error)
 
 
