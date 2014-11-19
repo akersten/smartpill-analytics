@@ -152,6 +152,7 @@ def register():
 
         g.db.execute(queries.INSERT_ACCOUNT, (name, email, password, type))
         g.db.commit()
+
         flash("Account successfully registered.")
         return redirect(url_for('login'))
     return render_template('register.html', error=error)
