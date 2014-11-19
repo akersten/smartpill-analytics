@@ -127,27 +127,33 @@ def logout():
 def register():
     error = None
     if request.method == 'POST':
+        name = request.form['nameInput']
         email = request.form['emailInput']
         password = request.form['passwordInput']
         type = request.form['typeRadios']
 
-        if email == '':
-            error = 'Please enter an account name.'
-        if password == '':
-            error = 'Please enter a password.'
         if type == '':
             error = 'Please select an account type.'
+        if password == '':
+            error = 'Please enter a password.'
+        if email == '':
+            error = 'Please enter an account name.'
+        if name == '':
+            error = 'Please enter a full name.'
 
         # Check if this user already exists...
         cur = g.db.execute(queries.SELECT_ACCOUNT_BY_EMAIL, (email,));
         entries = [dict(type=row[0], name=row[1]) for row in cur.fetchall()]
         if len(entries) > 0:
             error = 'Account name already exists.'
-        else:
-            g.db.execute(queries.INSERT_ACCOUNT, ("TODO", email, password, type))
-            g.db.commit()
-            flash("Account successfully registered.")
-            return redirect(url_for('login'))
+
+        if error is not None:
+            return render_template('register.html', error=error)
+
+        g.db.execute(queries.INSERT_ACCOUNT, (name, email, password, type))
+        g.db.commit()
+        flash("Account successfully registered.")
+        return redirect(url_for('login'))
     return render_template('register.html', error=error)
 
 
