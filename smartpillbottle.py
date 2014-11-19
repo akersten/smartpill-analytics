@@ -90,13 +90,13 @@ def add_user():
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME']:
-            error = 'Invalid username'
-        elif request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid password'
+        if request.form['emailInput'] != app.config['USERNAME']:
+            error = 'Bad username or password.'
+        elif request.form['passwordInput'] != app.config['PASSWORD']:
+            error = 'Bad username or password.'
         else:
             session['logged_in'] = True
-            flash('Login successful')
+            flash('Login successful.')
             return redirect(url_for('show_users'))
     return render_template('login.html', error=error)
 
