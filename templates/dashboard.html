@@ -10,16 +10,61 @@
             <ul class="nav nav-tabs">
                 <!-- todo generate these in python so we know which is active... -->
                 <li role="presentation" class="active">
-                    <a href="#">Dashboard</a>
+                    <a href="#">Dashboard - Patient</a>
                 </li>
                 <li role="presentation">
-                    <a href="#">Thing One</a>
-                </li>
-                <li role="presentation">
-                    <a href="#">Thing Two</a>
+                    <a href="#">Logout</a>
                 </li>
             </ul>
         </div>
+    </div>
+    <div class="row">
+        <br /><br />
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+         <script type="text/javascript">
+      google.load("visualization", "1.1", {packages:["calendar"]});
+      google.setOnLoadCallback(drawChart);
+
+   function drawChart() {
+       var dataTable = new google.visualization.DataTable();
+       dataTable.addColumn({ type: 'date', id: 'Date' });
+       dataTable.addColumn({ type: 'number', id: 'Won/Loss' });
+       dataTable.addRows([
+          [ new Date(2012, 3, 13), 1 ],
+          [ new Date(2012, 3, 14), 1 ],
+          [ new Date(2012, 3, 15), 1 ],
+          [ new Date(2012, 3, 16), 1 ],
+          [ new Date(2012, 3, 17), 1 ],
+          // Many rows omitted for brevity.
+          [ new Date(2013, 9, 4), 8 ],
+          [ new Date(2013, 9, 5), 1 ],
+          [ new Date(2013, 9, 12), 1 ],
+          [ new Date(2013, 9, 13), 1 ],
+          [ new Date(2013, 9, 19), 1 ],
+          [ new Date(2013, 9, 23), 1 ],
+          [ new Date(2013, 9, 24), 1 ],
+          [ new Date(2013, 9, 30), 1 ],
+          [ new Date(2013, 10, 30), 0 ],
+               [ new Date(2014, 10, 30), 1 ]
+        ]);
+
+       var chart = new google.visualization.Calendar(document.getElementById('calendar_basic'));
+
+       var options = {
+         title: "Prescription Adherence",
+         height: 500,
+       };
+
+       chart.draw(dataTable, options);
+   }
+    </script>
+
+    <div id="calendar_basic">
+
+    </div>
+
+
     </div>
 </div>
 {% endblock %}
