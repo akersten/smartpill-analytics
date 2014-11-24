@@ -98,24 +98,32 @@ def login():
         if password == '':
             error = 'Please enter a password.'
 
-        # TODO: Check email/password combo
 
-        if email != app.config['USERNAME']:
-            error = 'Bad account name or password.'
-        elif password != app.config['PASSWORD']:
+        cur = g.db.execute(queries.SELECT_ACCOUNT_BY_EMAIL, (email,))
+        entries = [dict(passwd=row[3]) for row in cur.fetchall()]
+
+        good = False
+        if len (entries) > 0:
+            if password == entries[0].get('passwd'):
+                good = True
+
+        if not good:
             error = 'Bad account name or password.'
         else:
             session['logged_in'] = True
+            session['email'] = email
             flash('Login successful.')
-            return redirect(url_for('show_users'))
+            return redirect(url_for('dashboard'))
     return render_template('login.html', error=error)
 
 
 #
 # Logout method
 #
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('logged_in', None)
+    session.pop('email', None)
     flash('Logout successful')
     return redirect(url_for('login'))
 
@@ -143,7 +151,7 @@ def register():
 
         # Check if this user already exists...
         cur = g.db.execute(queries.SELECT_ACCOUNT_BY_EMAIL, (email,))
-        entries = [dict(type=row[0], name=row[1]) for row in cur.fetchall()]
+        entries = [dict(email=row[2]) for row in cur.fetchall()]
         if len(entries) > 0:
             error = 'Account name already exists.'
 
@@ -164,8 +172,21 @@ def register():
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     error = None
-    return render_template('dashboard.html', error=error)
 
+    if not session.get('logged_in'):
+        error = 'You must be logged in to use this page.'
+        return render_template('login.html', error=error)
+
+    cur = g.db.execute(queries.SELECT_ACCOUNT_BY_EMAIL, (session.get('email'),));
+    entries = [dict(type=row[4]) for row in cur.fetchall()]
+
+    if entries[0].get('type') == 'caregiver':
+        return render_template('dashboard_caregiver.html', error=error)
+    elif entries[0].get('type') == 'patient':
+        return render_template('dashboard_patient.html', error=error)
+    else:
+        error = 'Invalid user type: ' + entries[0].type # XXX: XSS
+        return render_template('login.html', error=error)
 
 if __name__ == '__main__':
     app.run()
