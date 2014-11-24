@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+           <h1 class="logo">Smartpill</h1>
+        </div>
+        <div class="col-md-10">
+            <ul class="nav nav-tabs">
+                <!-- todo generate these in python so we know which is active... -->
+                <li role="presentation" class="active">
+                    <a href="#">Dashboard</a>
+                </li>
+                <li role="presentation">
+                    <a href="#">Thing One</a>
+                </li>
+                <li role="presentation">
+                    <a href="#">Thing Two</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

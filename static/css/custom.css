@@ -16,3 +16,10 @@ a.custom {
 a.custom:hover {
     color: #cc0000;
 }
+
+h1.logo {
+    color: #aa0000;
+    font-weight: bolder;
+    margin-top: 0em;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}

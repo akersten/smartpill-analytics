@@ -98,7 +98,7 @@ def login():
         if password == '':
             error = 'Please enter a password.'
 
-# TODO: Check email/password combo
+        # TODO: Check email/password combo
 
         if email != app.config['USERNAME']:
             error = 'Bad account name or password.'
@@ -142,7 +142,7 @@ def register():
             error = 'Please enter a full name.'
 
         # Check if this user already exists...
-        cur = g.db.execute(queries.SELECT_ACCOUNT_BY_EMAIL, (email,));
+        cur = g.db.execute(queries.SELECT_ACCOUNT_BY_EMAIL, (email,))
         entries = [dict(type=row[0], name=row[1]) for row in cur.fetchall()]
         if len(entries) > 0:
             error = 'Account name already exists.'
@@ -156,6 +156,15 @@ def register():
         flash("Account successfully registered.")
         return redirect(url_for('login'))
     return render_template('register.html', error=error)
+
+
+#
+# Dashboard
+#
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    error = None
+    return render_template('dashboard.html', error=error)
 
 
 if __name__ == '__main__':
