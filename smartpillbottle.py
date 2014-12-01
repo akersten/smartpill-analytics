@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
+from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, jsonify
 from contextlib import closing
 import queries
 # ######################################################################################################################
@@ -187,6 +187,48 @@ def dashboard():
     else:
         error = 'Invalid user type: ' + entries[0].type # XXX: XSS
         return render_template('login.html', error=error)
+
+
+#
+# API Methods
+#
+
+#
+# List medicine that needs to be taken today (actually, within 24 hours of the timestamp)
+#
+@app.route('/data/schedule/<username>/<timestamp>', methods=['GET'])
+def schedule(username, timestamp):
+    return jsonify({'success': True})
+#
+# When the user takes or untakes pills, let us know.
+#
+@app.route('/data/take', methods=['POST'])
+def take():
+    content = request.json
+
+    if not content:
+        return jsonify({'success': False, 'error': 'Make sure request content-type is application/json...'})
+
+    if not 'username' in content:
+        return jsonify({'success': False, 'error': 'Please provide a username.'})
+
+    if not 'items' in content:
+        return jsonify({'success': False, 'error': 'Please provide an items (name, timestamp) list.'})
+
+    username = content['username']
+    items = content['items']
+
+    if not isinstance(items, list):
+        return jsonify({'success': False, 'error': 'Items must be a list of (name, timestamp) tuples.'})
+
+    # TODO: Okay, the sanity checking ends here. Make sure you're providing 'name', 'timestamp', 'taken' fields
+    print('User ' + username + ' just told us:')
+    for i in items:
+        print('\tDose of ' + i.get('name') + ' at ' + str(i.get('timestamp')) + ' - taken: ' + str(i.get('taken')))
+
+    # TODO: Check for closest instance of this pill that needs to be taken...
+
+    return jsonify({    'success': True, 'error': 'So far so good, hello ' + username})
 
 if __name__ == '__main__':
     app.run()
