@@ -100,7 +100,7 @@ def login():
 
 
         cur = g.db.execute(queries.SELECT_ACCOUNT_BY_EMAIL, (email,))
-        entries = [dict(passwd=row[3]) for row in cur.fetchall()]
+        entries = [dict(name=row[1], passwd=row[3], type=row[4]) for row in cur.fetchall()]
 
         good = False
         if len (entries) > 0:
@@ -110,9 +110,12 @@ def login():
         if not good:
             error = 'Bad account name or password.'
         else:
+            # Load session values from the database entry corresponding to this account.
             session['logged_in'] = True
             session['email'] = email
-            flash('Login successful.')
+            session['name'] = entries[0].get('name') # Full name
+            session['type'] = entries[0].get('type') # Patient or caregiver?
+            flash('Login successful. Hello ' + session['name'] + '!')
             return redirect(url_for('dashboard'))
     return render_template('login.html', error=error)
 
@@ -177,20 +180,17 @@ def dashboard():
         error = 'You must be logged in to use this page.'
         return render_template('login.html', error=error)
 
-    cur = g.db.execute(queries.SELECT_ACCOUNT_BY_EMAIL, (session.get('email'),));
-    entries = [dict(type=row[4]) for row in cur.fetchall()]
-
-    if entries[0].get('type') == 'caregiver':
+    if session['type'] == 'caregiver':
         return render_template('dashboard_caregiver.html', error=error)
-    elif entries[0].get('type') == 'patient':
+    elif session['type'] == 'patient':
         return render_template('dashboard_patient.html', error=error)
     else:
-        error = 'Invalid user type: ' + entries[0].type # XXX: XSS
+        error = 'Invalid user type: ' + session['type'] # XXX: XSS
         return render_template('login.html', error=error)
 
 
 #
-# API Methods
+# API Endpoints
 #
 
 #

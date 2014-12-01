@@ -22,6 +22,7 @@ DROP TABLE IF EXISTS careRelations;
 -- caregiverId: The ID of the caregiver from the `accounts` table
 -- patientId: The ID of the patient from the `accounts` table
 CREATE TABLE careRelations (
+    id INTEGER PRIMARY KEY,
     caregiverId INTEGER NOT NULL,
     patientId INTEGER NOT NULL,
     FOREIGN KEY(caregiverId) REFERENCES accounts(id),
