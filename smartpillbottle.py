@@ -198,6 +198,7 @@ def dashboard():
 #
 @app.route('/data/schedule/<username>/<timestamp>', methods=['GET'])
 def schedule(username, timestamp):
+    print('Getting schedule for ' + username + ' on ' + str(timestamp))
     return jsonify({'success': True})
 #
 # When the user takes or untakes pills, let us know.
