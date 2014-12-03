@@ -33,12 +33,14 @@ CREATE TABLE careRelations (
 DROP TABLE IF EXISTS prescriptions;
 
 -- id: Automatic primary key
+-- prescriptionName: The name of the medicine
 -- patient: The ID of the patient from the `accounts` table
 -- start: The unix timestamp when the prescription begins
 -- end: The unix timestamp when the prescription ends (if not specified, the prescription is considered indefinite)
 -- schedule: How often the dosage needs to happen (in unix time intervals from the time specified by `start`)
 CREATE TABLE prescriptions (
     id INTEGER PRIMARY KEY,
+    prescriptionName TEXT NOT NULL,
     patient INTEGER NOT NULL,
     start INTEGER NOT NULL,
     end INTEGER,
@@ -51,10 +53,17 @@ DROP TABLE IF EXISTS doses;
 
 -- id: Automatic primary key
 -- prescriptionId: The ID of the prescription from the `prescriptions` table
+-- prescriptionName: The name of the medicine from the `prescriptions` table
 -- time: What time (unix timestamp) the patient took the dose
+-- taken: Whether the dose has been taken (1) or not (0)
 CREATE TABLE doses (
     id INTEGER PRIMARY KEY,
     prescriptionId INTEGER NOT NULL,
+    prescriptionName TEXT NOT NULL,
     time INTEGER NOT NULL,
-    FOREIGN KEY(prescriptionId) REFERENCES prescriptions(id)
+    taken INTEGER NOT NULL,
+    patientName TEXT NOT NULL,
+    FOREIGN KEY(prescriptionName) REFERENCES prescriptions(prescriptionName),
+    FOREIGN KEY(prescriptionId) REFERENCES prescriptions(id),
+    FOREIGN KEY(patientName) REFERENCES accounts(name)
 );

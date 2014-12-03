@@ -198,8 +198,17 @@ def dashboard():
 #
 @app.route('/data/schedule/<username>/<timestamp>', methods=['GET'])
 def schedule(username, timestamp):
-    print('Getting schedule for ' + username + ' on ' + str(timestamp))
-    return jsonify({'success': True})
+    timestamp = int(timestamp)
+
+    # Determine upper and lower bound for day containing the given timestamp...
+    lowerBound = timestamp - (timestamp % (60 * 60 * 24));
+    upperBound = (timestamp + 60 * 60 * 24) - (timestamp % (60 * 60 * 24));
+    print('Getting schedule for ' + username + ' between ' + str(lowerBound) + ', ' + str(upperBound))
+
+    cur = g.db.execute(queries.SELECT_DOSES_BY_TIME_BETWEEN, (username, lowerBound, upperBound))
+    entries = [dict(prescriptionName=row[2], time=row[3], taken=row[4]) for row in cur.fetchall()]
+
+    return jsonify({'success': True, 'items': entries})
 #
 # When the user takes or untakes pills, let us know.
 #
@@ -229,7 +238,7 @@ def take():
 
     # TODO: Check for closest instance of this pill that needs to be taken...
 
-    return jsonify({    'success': True, 'error': 'So far so good, hello ' + username})
+    return jsonify({'success': True, 'error': 'So far so good, hello ' + username})
 
 if __name__ == '__main__':
     app.run()
