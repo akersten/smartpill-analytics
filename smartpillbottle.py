@@ -181,7 +181,8 @@ def dashboard():
         return render_template('login.html', error=error)
 
     if session['type'] == 'caregiver':
-        return render_template('dashboard_caregiver.html', error=error)
+        cur = g.db.execute(queries.SELECT_PATIENTS_BY_CAREGIVER_EMAIL, (session['email'],))
+        return render_template('dashboard_caregiver.html', error=error, patients=cur.fetchall())
     elif session['type'] == 'patient':
         return render_template('dashboard_patient.html', error=error)
     else:

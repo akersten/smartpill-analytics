@@ -34,6 +34,24 @@
         {% endwith %}
 
 
+    <h2>My Patients</h2>
+    <p>
+        <a href="#" onclick="addPatient(); return false;" class="btn btn-default">Add Patient</a>
+    </p>
+
+    <ul>
+        {% for patient in patients %}
+        <li style="display: block;">
+            {{patient.name}}
+            <a href="#" onclick="addScript({{patient.id}}); return false;">Add Prescription</a>
+        </li>
+        {% else %}
+        <li>(No Patients)</li>
+        {% endfor %}
+    </ul>
+
+        <!--
+
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
          <script type="text/javascript">
@@ -78,7 +96,7 @@
 
         </div>
 
-
+-->
     </div>
 </div>
 {% endblock %}
