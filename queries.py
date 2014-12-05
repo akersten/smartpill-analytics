@@ -23,3 +23,9 @@ INSERT_DOSE = """
     INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
     VALUES (?, ?, ?, ?, ?)
 """
+
+UPDATE_ACTUAL_TIME_AND_TAKEN_BY_DOSE_TIME = """
+    UPDATE doses
+    SET actualTime=?, taken=?
+    WHERE time=?
+"""

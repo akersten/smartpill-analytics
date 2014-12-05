@@ -54,13 +54,15 @@ DROP TABLE IF EXISTS doses;
 -- id: Automatic primary key
 -- prescriptionId: The ID of the prescription from the `prescriptions` table
 -- prescriptionName: The name of the medicine from the `prescriptions` table
--- time: What time (unix timestamp) the patient took the dose
+-- time: What time (unix timestamp) the patient should have
+-- actualTime: What time (unix timestamp)
 -- taken: Whether the dose has been taken (1) or not (0)
 CREATE TABLE doses (
     id INTEGER PRIMARY KEY,
     prescriptionId INTEGER NOT NULL,
     prescriptionName TEXT NOT NULL,
     time INTEGER NOT NULL,
+    actualTime INTEGER,
     taken INTEGER NOT NULL,
     patientName TEXT NOT NULL,
     FOREIGN KEY(prescriptionName) REFERENCES prescriptions(prescriptionName),

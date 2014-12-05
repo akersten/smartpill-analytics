@@ -202,16 +202,17 @@ def schedule(username, timestamp):
     timestamp = int(timestamp)
 
     # Determine upper and lower bound for day containing the given timestamp...
-    lowerBound = timestamp - (timestamp % (60 * 60 * 24));
-    upperBound = (timestamp + 60 * 60 * 24) - (timestamp % (60 * 60 * 24));
+    lowerBound = timestamp - (timestamp % (60 * 60 * 24))
+    upperBound = (timestamp + 60 * 60 * 24) - (timestamp % (60 * 60 * 24))
     print('Getting schedule for ' + username + ' between ' + str(lowerBound) + ', ' + str(upperBound))
 
     cur = g.db.execute(queries.SELECT_DOSES_BY_TIME_BETWEEN, (username, lowerBound, upperBound))
-    entries = [dict(prescriptionName=row[2], time=row[3], taken=row[4]) for row in cur.fetchall()]
+    entries = [dict(prescriptionName=row[2], time=row[3], taken=row[5]) for row in cur.fetchall()]
 
     return jsonify({'success': True, 'items': entries})
 #
-# When the user takes or untakes pills, let us know.
+# When the user takes or untakes pills, let us know. The timestamp sent will identify which dose the app is referencing,
+# and the actualTime field will say when this dose was actually taken.
 #
 @app.route('/data/take', methods=['POST'])
 def take():
@@ -230,16 +231,51 @@ def take():
     items = content['items']
 
     if not isinstance(items, list):
-        return jsonify({'success': False, 'error': 'Items must be a list of (name, timestamp) tuples.'})
+        return jsonify({'success': False, 'error': 'Items must be a list of (name, timestamp, actualTime) tuples.'})
 
     # TODO: Okay, the sanity checking ends here. Make sure you're providing 'name', 'timestamp', 'taken' fields
     print('User ' + username + ' just told us:')
     for i in items:
-        print('\tDose of ' + i.get('name') + ' at ' + str(i.get('timestamp')) + ' - taken: ' + str(i.get('taken')))
+        print('\tDose of ' + i.get('name') + ' at ' + str(i.get('doseTime')) + ' - taken: ' + str(i.get('taken')) + ' actual time: ' + str(i.get('actualTime')))
 
-    # TODO: Check for closest instance of this pill that needs to be taken...
+        # Two cases - ether the dose time is known and we're retroactively setting one, or we have to estmate based
+        # on the actualTime (i.e. doseTime is 0.)
 
-    return jsonify({'success': True, 'error': 'So far so good, hello ' + username})
+        if (i.get('doseTime') != 0):
+            print('\t\tDose time known, updating the actualTime and taken.')
+            g.db.execute(queries.UPDATE_ACTUAL_TIME_AND_TAKEN_BY_DOSE_TIME, (i.get('actualTime'), i.get('taken'), i.get('doseTime')))
+            g.db.commit()
+            continue
+
+        print('\t\tUnknown dose time, finding closest dose to time ' + str(i.get('actualTime')))
+        timestamp = i.get('actualTime')
+        lowerBound = timestamp - (timestamp % (60 * 60 * 24))
+        upperBound = (timestamp + 60 * 60 * 24) - (timestamp % (60 * 60 * 24))
+        print('Will be between ' + str(lowerBound) + ' and ' + str(upperBound))
+
+        cur = g.db.execute(queries.SELECT_DOSES_BY_TIME_BETWEEN, (username, lowerBound, upperBound))
+        entries = [dict(prescriptionName=row[2], time=row[3], taken=row[5]) for row in cur.fetchall()]
+        print('\t\tFound ' + str(len(entries)) + ' candidates...')
+
+        bestDistance = 86400
+        bestEntry = None
+
+        for e in entries:
+            delta = abs(e.get('time') - timestamp)
+            print('\t\t\tFound an entry ' + str(delta) + ' away')
+            if (delta < bestDistance):
+                print('\t\t\t... it was better.')
+                bestDistance = delta
+                bestEntry = e
+
+        if bestEntry is None:
+            print("\t\tNO DOSE FOUND!")
+            continue
+        print(bestEntry)
+        print('\t\tUpdating dose at ' + str(bestEntry.get('time')) + ', setting taken = ' + str(i.get('taken')))
+        g.db.execute(queries.UPDATE_ACTUAL_TIME_AND_TAKEN_BY_DOSE_TIME, (i.get('actualTime'), i.get('taken'), bestEntry.get('time')));
+        g.db.commit()
+    return jsonify({'success': True, 'error': 'Ok.'})
 
 if __name__ == '__main__':
     app.run()
