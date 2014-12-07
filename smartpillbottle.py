@@ -328,6 +328,18 @@ def prescribe():
     print('\tunix end time: ' + str(endTimestamp))
     print('\tfrequency: ' + str(frequency))
 
+    print("\tAdding a new prescription...")
+    g.db.execute(queries.INSERT_PRESCRIPTION, (prescriptionName, patientId, startTimestamp, endTimestamp, frequency))
+    g.db.commit()
+
+    print('\tOkay, generating doses...')
+
+#    prescriptionId = x
+
+#    x = startTimestamp
+#    while x < endTimestamp:
+#        g.db.execute(queries.INSERT_DOSE)
+#        x += 60 * 60 * frequency
     flash('Prescription added successfully.')
     return redirect(url_for('dashboard'))
 

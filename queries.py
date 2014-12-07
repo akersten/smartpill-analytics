@@ -27,6 +27,11 @@ SELECT_DOSES_BY_TIME_BETWEEN = """
     SELECT * FROM doses WHERE patientName = ? AND time > ? AND time < ?
 """
 
+INSERT_PRESCRIPTION = """
+    INSERT INTO prescriptions(prescriptionName, patient, start, end, schedule)
+    VALUES (?, ?, ?, ?, ?)
+"""
+
 INSERT_DOSE = """
     INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
     VALUES (?, ?, ?, ?, ?)
