@@ -62,7 +62,7 @@
 
             <ul class="list-unstyled" style="margin-top: 1em;">
                 {% for scrip in relevantPrescriptions %}
-                    {% if scrip[0] == patient[0] %}
+                    {% if scrip[2] == patient[0] %}
                     <li style="margin-left: 3em;">
                         <h4>
                             <span class="glyphicon glyphicon-share-alt" style="color: #440000; float: left; margin-left: -1em;"> </span>{{ scrip[1] }}
