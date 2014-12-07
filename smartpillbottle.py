@@ -185,8 +185,6 @@ def dashboard():
         patients = cur.fetchall()
         cur = g.db.execute(queries.SELECT_UNCLAIMED_PATIENTS)
         unclaimed = cur.fetchall()
-        print(session['email'])
-        print(unclaimed)
         return render_template('dashboard_caregiver.html', error=error, patients=patients, unclaimed=unclaimed)
     elif session['type'] == 'patient':
         cur = g.db.execute(queries.SELECT_PRESCRIPTIONS_BY_PATIENT_EMAIL, (session['email'],))
