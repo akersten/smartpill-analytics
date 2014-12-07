@@ -37,6 +37,16 @@ INSERT_DOSE = """
     VALUES (?, ?, ?, ?, ?)
 """
 
+DELETE_PRESCRIPTION = """
+    DELETE FROM prescriptions
+    WHERE id=?
+"""
+
+DELETE_DOSES = """
+    DELETE FROM doses
+    WHERE prescriptionId = ?
+"""
+
 UPDATE_ACTUAL_TIME_AND_TAKEN_BY_DOSE_TIME = """
     UPDATE doses
     SET actualTime=?, taken=?

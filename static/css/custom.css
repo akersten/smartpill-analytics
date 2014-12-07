@@ -31,6 +31,15 @@ ul.list-wells > li {
     border-radius: 4px;
 }
 
+ul.list-wells > li > ul > li {
+    margin-bottom: 1em;
+}
+
+ul.list-wells h4 {
+    display: inline;
+}
+
+
 h1, h2, h3, h4, h5, h6 {
     margin-top: 0em;
 }

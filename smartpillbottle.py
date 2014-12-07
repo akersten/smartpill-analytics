@@ -313,26 +313,27 @@ def claim(patientId):
 @app.route('/caregiver/prescribe', methods=['POST'])
 def prescribe():
     print('Adding prescription...')
-    strBegin = request.form['inputStartDate']
-    strEnd = request.form['inputEndDate']
+    try:
+        strBegin = request.form['inputStartDate']
+        strEnd = request.form['inputEndDate']
 
-    patientId = request.form['inputTarget']
-    prescriptionName = request.form['inputPrescriptionName']
-    frequency = request.form['inputFrequency']
-    startTimestamp = time.mktime(datetime.datetime.strptime(strBegin, '%Y-%m-%dT%H:%M').timetuple())
-    endTimestamp = time.mktime(datetime.datetime.strptime(strEnd, '%Y-%m-%dT%H:%M').timetuple())
+        patientId = request.form['inputTarget']
+        prescriptionName = request.form['inputPrescriptionName']
+        frequency = request.form['inputFrequency']
+        startTimestamp = time.mktime(datetime.datetime.strptime(strBegin, '%Y-%m-%dT%H:%M').timetuple())
+        endTimestamp = time.mktime(datetime.datetime.strptime(strEnd, '%Y-%m-%dT%H:%M').timetuple())
 
-    print('\tPatient ID: ' + str(patientId))
-    print('\tPrescription name: ' + prescriptionName)
-    print('\tunix start time: ' + str(startTimestamp))
-    print('\tunix end time: ' + str(endTimestamp))
-    print('\tfrequency: ' + str(frequency))
+        print('\tPatient ID: ' + str(patientId))
+        print('\tPrescription name: ' + prescriptionName)
+        print('\tunix start time: ' + str(startTimestamp))
+        print('\tunix end time: ' + str(endTimestamp))
+        print('\tfrequency: ' + str(frequency))
 
-    print("\tAdding a new prescription...")
-    g.db.execute(queries.INSERT_PRESCRIPTION, (prescriptionName, patientId, startTimestamp, endTimestamp, frequency))
-    g.db.commit()
+        print("\tAdding a new prescription...")
+        g.db.execute(queries.INSERT_PRESCRIPTION, (prescriptionName, patientId, startTimestamp, endTimestamp, frequency))
+        g.db.commit()
 
-    print('\tOkay, generating doses...')
+        print('\tOkay, generating doses...')
 
 #    prescriptionId = x
 
@@ -340,8 +341,31 @@ def prescribe():
 #    while x < endTimestamp:
 #        g.db.execute(queries.INSERT_DOSE)
 #        x += 60 * 60 * frequency
-    flash('Prescription added successfully.')
-    return redirect(url_for('dashboard'))
+        flash('Prescription added successfully.')
+        return redirect(url_for('dashboard'))
+    except:
+        flash('Invalid form input!')
+        return redirect(url_for('dashboard'))
+
+#
+# Remove a prescription from the prescriptions table and doses table.
+#
+@app.route('/caregiver/unprescribe', methods=['POST'])
+def unprescribe():
+    try:
+        target = request.form['inputRemove']
+        print('Removing prescription #' + str(target) + '...')
+        g.db.execute(queries.DELETE_PRESCRIPTION, (target,))
+        g.db.execute(queries.DELETE_DOSES, (target,))
+        g.db.commit()
+
+        print('\tOkay...')
+
+        flash('Prescription removed.')
+        return redirect(url_for('dashboard'))
+    except:
+        flash('Invalid form input!')
+        return redirect(url_for('dashboard'))
 
 
 if __name__ == '__main__':
