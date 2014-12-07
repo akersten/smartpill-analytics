@@ -2,6 +2,8 @@ import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, jsonify
 from contextlib import closing
 import queries
+import time
+import datetime
 # ######################################################################################################################
 # Flask configuration and setup
 # ######################################################################################################################
@@ -310,15 +312,24 @@ def claim(patientId):
 #    # XXX: Should probably do sanity checks (make sure this is our patient, etc.)
 @app.route('/caregiver/prescribe', methods=['POST'])
 def prescribe():
-    print('ok')
-    if not request.form:
-        print('super noooo')
-    if not request.form['inputTarget']:
-        print('noooo')
-    print(request.form['inputTarget'])
-    return jsonify({'patientId': request.form['inputTarget'], 'prescription name': request.form['inputPrescriptionName'], 'start' : request.form['inputStartDate'], 'end' : request.form['inputEndDate'], 'frequency':request.form['inputFrequency']})
+    print('Adding prescription...')
+    strBegin = request.form['inputStartDate']
+    strEnd = request.form['inputEndDate']
 
+    patientId = request.form['inputTarget']
+    prescriptionName = request.form['inputPrescriptionName']
+    frequency = request.form['inputFrequency']
+    startTimestamp = time.mktime(datetime.datetime.strptime(strBegin, '%Y-%m-%dT%H:%M').timetuple())
+    endTimestamp = time.mktime(datetime.datetime.strptime(strEnd, '%Y-%m-%dT%H:%M').timetuple())
 
+    print('\tPatient ID: ' + str(patientId))
+    print('\tPrescription name: ' + prescriptionName)
+    print('\tunix start time: ' + str(startTimestamp))
+    print('\tunix end time: ' + str(endTimestamp))
+    print('\tfrequency: ' + str(frequency))
+
+    flash('Prescription added successfully.')
+    return redirect(url_for('dashboard'))
 
 
 if __name__ == '__main__':
