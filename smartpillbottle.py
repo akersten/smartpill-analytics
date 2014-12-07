@@ -185,7 +185,9 @@ def dashboard():
         patients = cur.fetchall()
         cur = g.db.execute(queries.SELECT_UNCLAIMED_PATIENTS)
         unclaimed = cur.fetchall()
-        return render_template('dashboard_caregiver.html', error=error, patients=patients, unclaimed=unclaimed)
+        cur = g.db.execute(queries.SELECT_PRESCRIPTIONS_BY_CAREGIVER_EMAIL, (session['email'],))
+        relevantPrescriptions = cur.fetchall()
+        return render_template('dashboard_caregiver.html', error=error, patients=patients, unclaimed=unclaimed, relevantPrescriptions=relevantPrescriptions)
     elif session['type'] == 'patient':
         cur = g.db.execute(queries.SELECT_PRESCRIPTIONS_BY_PATIENT_EMAIL, (session['email'],))
         prescriptions = cur.fetchall()
@@ -207,7 +209,7 @@ def dashboard():
 #
 
 #
-# List medicine that needs to be taken today (actually, within 24 hours of the timestamp)
+# List medicine that needs to be taken today
 #
 @app.route('/data/schedule/<username>/<timestamp>', methods=['GET'])
 def schedule(username, timestamp):
@@ -289,5 +291,18 @@ def take():
         g.db.commit()
     return jsonify({'success': True, 'error': 'Ok.'})
 
+@app.route('/caregiver/claim/<patientId>', methods=['GET'])
+def claim(patientId):
+    if not session.get('logged_in'):
+        flash('You need to be logged in to use this page.')
+        return redirect(url_for('login'))
+    if session['type'] != 'caregiver':
+        flash('You must be a caregiver to use this page.')
+        return redirect(url_for('dashboard'))
+
+    g.db.execute(queries.ASSIGN_PATIENT_TO_CAREGIVER_BY_ID_EMAIL, (session['email'], patientId))
+    g.db.commit()
+    flash('Patient claimed!')
+    return redirect(url_for('dashboard'))
 if __name__ == '__main__':
     app.run()

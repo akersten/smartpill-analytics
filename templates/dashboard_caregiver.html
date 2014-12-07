@@ -40,11 +40,18 @@
     </p>
 
     {% if patients %}
-    <ul>
+    <ul class="list-unstyled list-wells">
         {% for patient in patients %}
-        <li style="display: block;">
-            {{patient.name}}
-            <button type="button" href="#" data-toggle="modal" data-target="#addPrescriptionModal">Add Prescription</button>
+        <li>
+            {{patient[1]}}
+            <ul>
+                {% for scrip in relevantPrescriptions %}
+                    {% if scrip[0] == patient[0] %}
+                    <li>{{ scrip[1] }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <button type="button" href="#" class="btn btn-default" data-toggle="modal" data-target="#addPrescriptionModal">Add Prescription</button>
         </li>
         {% endfor %}
     </ul>
@@ -103,7 +110,7 @@
 -->
 
         <!-- MODAL ELEMENTS -->
-        <!-- Modal -->
+        <!-- Modal for adding a patient -->
         <div class="modal fade" id="addPatientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -114,7 +121,29 @@
               <div class="modal-body">
                 <ul class="list-inline">
                     {% for p in unclaimed %}
-                    <li><a href="#" class="btn btn-default">{{ p[1] }}</a></li>
+                    <li><a href="/caregiver/claim/{{ p[0] }}" class="btn btn-default">{{ p[1] }}</a></li>
+                    {% endfor %}
+                </ul>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal for adding a prescription to a patient -->
+        <div class="modal fade" id="addPrescription" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add a Patient</h4>
+              </div>
+              <div class="modal-body">
+                <ul class="list-inline">
+                    {% for p in unclaimed %}
+                    <li><a href="/caregiver/claim/{{ p[0] }}" class="btn btn-default">{{ p[1] }}</a></li>
                     {% endfor %}
                 </ul>
               </div>
