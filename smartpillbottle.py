@@ -304,5 +304,22 @@ def claim(patientId):
     g.db.commit()
     flash('Patient claimed!')
     return redirect(url_for('dashboard'))
+
+#
+# Prescribe a patient based on data in the form field.
+#    # XXX: Should probably do sanity checks (make sure this is our patient, etc.)
+@app.route('/caregiver/prescribe', methods=['POST'])
+def prescribe():
+    print('ok')
+    if not request.form:
+        print('super noooo')
+    if not request.form['inputTarget']:
+        print('noooo')
+    print(request.form['inputTarget'])
+    return jsonify({'patientId': request.form['inputTarget'], 'prescription name': request.form['inputPrescriptionName'], 'start' : request.form['inputStartDate'], 'end' : request.form['inputEndDate'], 'frequency':request.form['inputFrequency']})
+
+
+
+
 if __name__ == '__main__':
     app.run()

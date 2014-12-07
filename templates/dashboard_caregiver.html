@@ -46,6 +46,7 @@
 
         function updateTarget() {
             $('#addPrescriptionModalTitle').html('Add Prescription for ' + targetName);
+            $('#inputTarget').val(targetPatient);
         }
     </script>
 
@@ -160,11 +161,44 @@
                 <h4 class="modal-title" id="addPrescriptionModalTitle">## UNSET ##</h4>
               </div>
               <div class="modal-body">
-                <ul class="list-inline">
-                    {% for p in unclaimed %}
-                    <li><a href="/caregiver/addPrescription/{{ p[0] }}" class="btn btn-default">{{ p[1] }}</a></li>
-                    {% endfor %}
-                </ul>
+
+<form class="form-horizontal" role="form" method="POST" action="/caregiver/prescribe">
+  <div class="form-group">
+    <label for="inputPrescriptionName" class="col-sm-2 control-label">Medicine</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="inputPrescriptionName" name="inputPrescriptionName" placeholder="Asprin">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputStartDate" class="col-sm-2 control-label">Start Date</label>
+    <div class="col-sm-10">
+      <input type="datetime-local" class="form-control" id="inputStartDate" name="inputStartDate">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputEndDate" class="col-sm-2 control-label">End Date</label>
+    <div class="col-sm-10">
+      <input type="datetime-local" class="form-control" id="inputEndDate" name="inputEndDate">
+    </div>
+  </div>
+    <div class="form-group">
+    <label for="inputFrequency" class="col-sm-2 control-label">Frequency</label>
+    <div class="col-sm-10">
+      <input type="number" class="form-control" id="inputFrequency" name="inputFrequency" placeholder="8">
+    </div>
+  </div>
+
+    <!-- Hidden field to track which patient we're modifying. -->
+    <input type="number" style="display: none;" id="inputTarget" name="inputTarget" />
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-danger">Confirm Prescription</button>
+    </div>
+  </div>
+</form>
+
+
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
