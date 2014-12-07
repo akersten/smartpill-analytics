@@ -309,7 +309,7 @@ def claim(patientId):
 
 #
 # Prescribe a patient based on data in the form field.
-#    # XXX: Should probably do sanity checks (make sure this is our patient, etc.)
+#    # XXX: Should probably do sanity checks (make sure this is our patient, make sure form fields are set/correct etc.)
 @app.route('/caregiver/prescribe', methods=['POST'])
 def prescribe():
     print('Adding prescription...')
