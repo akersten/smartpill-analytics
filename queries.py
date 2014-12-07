@@ -10,6 +10,14 @@ SELECT_OTHER_PATIENTS_BY_CAREGIVER_EMAIL = """
     SELECT * FROM accounts WHERE id=(SELECT patientId FROM careRelations WHERE caregiverId<>(SELECT id FROM accounts WHERE email=?))
 """
 
+SELECT_CAREGIVER_BY_PATIENT_EMAIL = """
+    SELECT * FROM accounts WHERE id=(SELECT caregiverId FROM careRelations WHERE patientId = (SELECT id FROM accounts WHERE email=?))
+"""
+
+SELECT_UNCLAIMED_PATIENTS = """
+    SELECT * FROM accounts WHERE id NOT IN (SELECT patientId FROM careRelations) AND type = 'patient'
+"""
+
 INSERT_ACCOUNT = """
   INSERT INTO accounts(name, email, password, type)
   VALUES (?, ?, ?, ?)

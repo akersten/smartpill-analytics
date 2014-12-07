@@ -36,19 +36,23 @@
 
     <h2>My Patients</h2>
     <p>
-        <a href="#" onclick="addPatient(); return false;" class="btn btn-default">Add Patient</a>
+        <a href="#" class="btn btn-default" data-toggle="modal" data-target="#addPatientModal">Add Patient</a>
     </p>
 
+    {% if patients %}
     <ul>
         {% for patient in patients %}
         <li style="display: block;">
             {{patient.name}}
-            <a href="#" onclick="addScript({{patient.id}}); return false;">Add Prescription</a>
+            <button type="button" href="#" data-toggle="modal" data-target="#addPrescriptionModal">Add Prescription</button>
         </li>
-        {% else %}
-        <li>(No Patients)</li>
         {% endfor %}
     </ul>
+    {% else %}
+    <p>You don't have any patients!</p>
+    {% endif %}
+
+
 
         <!--
 
@@ -97,6 +101,30 @@
         </div>
 
 -->
+
+        <!-- MODAL ELEMENTS -->
+        <!-- Modal -->
+        <div class="modal fade" id="addPatientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add a Patient</h4>
+              </div>
+              <div class="modal-body">
+                <ul class="list-inline">
+                    {% for p in unclaimed %}
+                    <li><a href="#" class="btn btn-default">{{ p[1] }}</a></li>
+                    {% endfor %}
+                </ul>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- END MODAL ELEMENTS -->
     </div>
 </div>
 {% endblock %}

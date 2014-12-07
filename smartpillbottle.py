@@ -182,12 +182,23 @@ def dashboard():
 
     if session['type'] == 'caregiver':
         cur = g.db.execute(queries.SELECT_PATIENTS_BY_CAREGIVER_EMAIL, (session['email'],))
-        return render_template('dashboard_caregiver.html', error=error, patients=cur.fetchall())
+        patients = cur.fetchall()
+        cur = g.db.execute(queries.SELECT_UNCLAIMED_PATIENTS)
+        unclaimed = cur.fetchall()
+        print(session['email'])
+        print(unclaimed)
+        return render_template('dashboard_caregiver.html', error=error, patients=patients, unclaimed=unclaimed)
     elif session['type'] == 'patient':
         cur = g.db.execute(queries.SELECT_PRESCRIPTIONS_BY_PATIENT_EMAIL, (session['email'],))
         prescriptions = cur.fetchall()
-        print(prescriptions)
-        return render_template('dashboard_patient.html', error=error, prescriptions=prescriptions)
+        cur = g.db.execute(queries.SELECT_CAREGIVER_BY_PATIENT_EMAIL, (session['email'],))
+        caregiver = cur.fetchall()
+        if (len(caregiver) == 0):
+            caregiver = None
+        else:
+            caregiver = caregiver[0]
+
+        return render_template('dashboard_patient.html', error=error, prescriptions=prescriptions, caregiver=caregiver)
     else:
         error = 'Invalid user type: ' + session['type'] # XXX: XSS
         return render_template('login.html', error=error)

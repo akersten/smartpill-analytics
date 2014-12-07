@@ -32,6 +32,12 @@
                 {% endif %}
             {% endwith %}
 
+        <h2>My Caregiver</h2>
+        {% if caregiver %}
+            <p>Your caregiver is <strong>{{ caregiver }}</strong>.</p>
+        {% else %}
+            <p>You don't have a caregiver!</p>
+        {% endif %}
 
         <h2>My Prescriptions</h2>
         {% if prescriptions %}
@@ -43,6 +49,8 @@
         {% else %}
             <p>You don't have any prescriptions!</p>
         {% endif %}
+
+<!--
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
@@ -87,7 +95,7 @@
         <div id="calendar_basic">
 
         </div>
-
+-->
 
     </div>
 </div>
