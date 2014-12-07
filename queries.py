@@ -29,3 +29,8 @@ UPDATE_ACTUAL_TIME_AND_TAKEN_BY_DOSE_TIME = """
     SET actualTime=?, taken=?
     WHERE time=?
 """
+
+SELECT_PRESCRIPTIONS_BY_PATIENT_EMAIL = """
+    SELECT * FROM prescriptions
+    WHERE patient = (SELECT id FROM accounts WHERE email = ?)
+"""

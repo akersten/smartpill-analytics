@@ -8,9 +8,8 @@
         </div>
         <div class="col-md-10">
             <ul class="nav nav-tabs">
-                <!-- todo generate these in python so we know which is active... -->
                 <li role="presentation" class="active">
-                    <a href="#">Dashboard - Patient</a>
+                    <a href="#">Patient Dashboard - <strong>{{ session['name'] }}</strong></a>
                 </li>
                 <li role="presentation">
                     <a href="{{ url_for('logout') }}">Logout</a>
@@ -32,6 +31,16 @@
                     <br /><br />
                 {% endif %}
             {% endwith %}
+
+
+        {% if prescriptions %}
+            <h2>My Prescriptions</h2>
+            <ul class="list-unstyled list-wells">
+            {% for script in prescriptions %}
+                <li><strong>{{ script[1] }}</strong> &mdash; take every <strong>{{ (script[5] / 60 / 60)|round(1) }}</strong> hours</strong></li>
+            {% endfor %}
+            </ul>
+        {% endif %}
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
