@@ -33,13 +33,15 @@
             {% endwith %}
 
 
+        <h2>My Prescriptions</h2>
         {% if prescriptions %}
-            <h2>My Prescriptions</h2>
             <ul class="list-unstyled list-wells">
             {% for script in prescriptions %}
                 <li><strong>{{ script[1] }}</strong> &mdash; take every <strong>{{ (script[5] / 60 / 60)|round(1) }}</strong> hours</strong></li>
             {% endfor %}
             </ul>
+        {% else %}
+            <p>You don't have any prescriptions!</p>
         {% endif %}
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
