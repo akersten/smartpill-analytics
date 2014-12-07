@@ -2,6 +2,10 @@ SELECT_ACCOUNT_BY_EMAIL = """
     SELECT * FROM accounts WHERE email = ?
 """
 
+SELECT_ACCOUNT_EMAIL_BY_ID = """
+    SELECT email FROM accounts WHERE id = ?
+"""
+
 SELECT_PATIENTS_BY_CAREGIVER_EMAIL = """
     SELECT * FROM accounts WHERE id IN (SELECT patientId FROM careRelations WHERE caregiverId = (SELECT id FROM accounts WHERE email=?))
 """
@@ -18,13 +22,18 @@ SELECT_UNCLAIMED_PATIENTS = """
     SELECT * FROM accounts WHERE id NOT IN (SELECT patientId FROM careRelations) AND type = 'patient'
 """
 
+SELECT_DOSES_BY_TIME_BETWEEN = """
+    SELECT * FROM doses WHERE patientName = ? AND time > ? AND time < ?
+"""
+
+SELECT_PRESCRIPTION_ID_BY_PATIENT_ID_AND_PRESCRIPTION_NAME = """
+    SELECT id FROM prescriptions
+    WHERE patient = ? AND prescriptionName = ?
+"""
+
 INSERT_ACCOUNT = """
   INSERT INTO accounts(name, email, password, type)
   VALUES (?, ?, ?, ?)
-"""
-
-SELECT_DOSES_BY_TIME_BETWEEN = """
-    SELECT * FROM doses WHERE patientName = ? AND time > ? AND time < ?
 """
 
 INSERT_PRESCRIPTION = """

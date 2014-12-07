@@ -335,12 +335,19 @@ def prescribe():
 
         print('\tOkay, generating doses...')
 
-#    prescriptionId = x
+        cur = g.db.execute(queries.SELECT_PRESCRIPTION_ID_BY_PATIENT_ID_AND_PRESCRIPTION_NAME, (patientId, prescriptionName))
+        prescriptionId = cur.fetchall()[0][0]
 
-#    x = startTimestamp
-#    while x < endTimestamp:
-#        g.db.execute(queries.INSERT_DOSE)
-#        x += 60 * 60 * frequency
+        cur = g.db.execute(queries.SELECT_ACCOUNT_EMAIL_BY_ID, (patientId,))
+        patientName = cur.fetchall()[0][0]
+
+        x = startTimestamp
+        while x < endTimestamp:
+            g.db.execute(queries.INSERT_DOSE, (prescriptionId, prescriptionName, x, 0, patientName))
+            x += 60 * 60 * int(frequency)
+
+        g.db.commit()
+
         flash('Prescription added successfully.')
         return redirect(url_for('dashboard'))
     except:

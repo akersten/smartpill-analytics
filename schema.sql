@@ -72,23 +72,23 @@ CREATE TABLE doses (
 
 
 -- test data...
-INSERT INTO accounts(name, email, password, type)
-VALUES ("Tunnel Bob", "tunnel@bob.com", "steam tunnelz", "patient");
+--INSERT INTO accounts(name, email, password, type)
+--VALUES ("Tunnel Bob", "tunnel@bob.com", "steam tunnelz", "patient");
 
-INSERT INTO prescriptions(id, prescriptionName, patient, start, end, schedule)
-VALUES (1, "Little blue pill", (SELECT id FROM accounts WHERE email="tunnel@bob.com"), 0, 400000, 200);
+--INSERT INTO prescriptions(id, prescriptionName, patient, start, end, schedule)
+--VALUES (1, "Little blue pill", (SELECT id FROM accounts WHERE email="tunnel@bob.com"), 0, 400000, 200);
 
-INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
-VALUES (1, "Little blue pill", 10, 0, "Tunnel Bob");
-INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
-VALUES (1, "Little blue pill", 100, 0, "Tunnel Bob");
-INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
-VALUES (1, "Little blue pill", 1000, 1, "Tunnel Bob");
-INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
-VALUES (1, "Little blue pill", 10000, 1, "Tunnel Bob");
-INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
-VALUES (1, "Little blue pill", 20000, 0, "Tunnel Bob");
-INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
-VALUES (1, "Little blue pill", 30000, 0, "Tunnel Bob");
-INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
-VALUES (1, "Little blue pill", 40000, 0, "Tunnel Bob");
+--INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
+--VALUES (1, "Little blue pill", 10, 0, "Tunnel Bob");
+--INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
+--VALUES (1, "Little blue pill", 100, 0, "Tunnel Bob");
+--INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
+--VALUES (1, "Little blue pill", 1000, 1, "Tunnel Bob");
+--INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
+--VALUES (1, "Little blue pill", 10000, 1, "Tunnel Bob");
+--INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
+--VALUES (1, "Little blue pill", 20000, 0, "Tunnel Bob");
+--INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
+--VALUES (1, "Little blue pill", 30000, 0, "Tunnel Bob");
+--INSERT INTO doses(prescriptionId, prescriptionName, time, taken, patientName)
+--VALUES (1, "Little blue pill", 40000, 0, "Tunnel Bob");
