@@ -10,7 +10,7 @@
             <ul class="nav nav-tabs">
                 <!-- todo generate these in python so we know which is active... -->
                 <li role="presentation" class="active">
-                    <a href="#">Dashboard - Caregiver</a>
+                    <a href="#">Caregiver Dashboard - <strong>{{ session['name'] }}</strong></a>
                 </li>
                 <li role="presentation">
                     <a href="{{ url_for('logout') }}">Logout</a>
@@ -39,19 +39,38 @@
         <a href="#" class="btn btn-default" data-toggle="modal" data-target="#addPatientModal">Add Patient</a>
     </p>
 
+    <script>
+        // We'll need to track who we add prescriptions to...
+        var targetPatient = -1;
+        var targetName = '';
+
+        function updateTarget() {
+            $('#addPrescriptionModalTitle').html('Add Prescription for ' + targetName);
+        }
+    </script>
+
     {% if patients %}
     <ul class="list-unstyled list-wells">
         {% for patient in patients %}
         <li>
-            {{patient[1]}}
-            <ul>
+            <h3>{{patient[1]}}</h3>
+
+             <a href="#" class="btn btn-default" data-toggle="modal" data-target="#addPrescriptionModal" onclick="targetPatient = {{ patient[0] }} ; targetName = '{{ patient[1] }}'; updateTarget(); return false;">
+                Add Prescription
+            </a>
+
+            <ul class="list-unstyled">
                 {% for scrip in relevantPrescriptions %}
                     {% if scrip[0] == patient[0] %}
-                    <li>{{ scrip[1] }}</li>
+                    <li style="margin-left: 3em;">
+                        <h4>
+                            <span class="glyphicon glyphicon-share-alt" style="color: #440000; float: left; margin-left: -1em;"> </span>{{ scrip[1] }}
+                        </h4>
+                    </li>
                     {% endif %}
                 {% endfor %}
             </ul>
-            <button type="button" href="#" class="btn btn-default" data-toggle="modal" data-target="#addPrescriptionModal">Add Prescription</button>
+
         </li>
         {% endfor %}
     </ul>
@@ -116,7 +135,7 @@
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Add a Patient</h4>
+                <h4 class="modal-title" id="addPatientModalTitle">Add a Patient</h4>
               </div>
               <div class="modal-body">
                 <ul class="list-inline">
@@ -133,17 +152,17 @@
         </div>
 
         <!-- Modal for adding a prescription to a patient -->
-        <div class="modal fade" id="addPrescription" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addPrescriptionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Add a Patient</h4>
+                <h4 class="modal-title" id="addPrescriptionModalTitle">## UNSET ##</h4>
               </div>
               <div class="modal-body">
                 <ul class="list-inline">
                     {% for p in unclaimed %}
-                    <li><a href="/caregiver/claim/{{ p[0] }}" class="btn btn-default">{{ p[1] }}</a></li>
+                    <li><a href="/caregiver/addPrescription/{{ p[0] }}" class="btn btn-default">{{ p[1] }}</a></li>
                     {% endfor %}
                 </ul>
               </div>

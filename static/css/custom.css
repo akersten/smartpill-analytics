@@ -24,8 +24,13 @@ h1.logo {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-ul.list-wells li {
+ul.list-wells > li {
     padding: 8px;
+    margin-bottom: 1em;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0em;
 }
