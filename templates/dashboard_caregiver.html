@@ -81,18 +81,43 @@
                             </form>
                         </span>
                         <br /><br />
-                        <div id="calendar_patient_{{ patient[0] }}_{{ scrip[0] }}" style="width: 50%; height: 350px;">
-                            hi~
+
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div id="calendar_patient_{{ patient[0] }}_{{ scrip[0] }}_24h" style="width: 100%; height: 500px;">
+
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div id="calendar_patient_{{ patient[0] }}_{{ scrip[0] }}_lifetime" style="width: 100%; height: 500px;">
+
+                                </div>
+                            </div>
                         </div>
+
+
 
                         <script>
                             google.setOnLoadCallback(drawChartForPatient_{{ patient[0] }}_{{ scrip[0] }});
 
                             function drawChartForPatient_{{ patient[0] }}_{{ scrip[0] }}()
                             {
-                                var dataTable = new google.visualization.arrayToDataTable([
+                                var dataTableLifetime = new google.visualization.arrayToDataTable([
                                     ['Dose', 'Status'],
-                                    {% for dose in doseInformation %}
+                                    {% for dose in doseInformationLifetime %}
+                                        {% if dose[2] == scrip[0] %}
+                                            {% if dose[1]|string == '1' %}
+                                                ['Taken', {{ dose[0] }}],
+                                            {% else %}
+                                                ['Missed', {{ dose[0] }}],
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                ]);
+
+                            var dataTable24 = new google.visualization.arrayToDataTable([
+                                    ['Dose', 'Status'],
+                                    {% for dose in doseInformation24 %}
                                         {% if dose[2] == scrip[0] %}
                                             {% if dose[1]|string == '1' %}
                                                 ['Taken', {{ dose[0] }}],
@@ -104,14 +129,22 @@
                                 ]);
 
 
-                                var chart = new google.visualization.PieChart(document.getElementById('calendar_patient_{{ patient[0] }}_{{ scrip[0] }}'));
+                                var chartLifetime = new google.visualization.PieChart(document.getElementById('calendar_patient_{{ patient[0] }}_{{ scrip[0] }}_lifetime'));
+                                var chart24 = new google.visualization.PieChart(document.getElementById('calendar_patient_{{ patient[0] }}_{{ scrip[0] }}_24h'));
 
-                                var options = {
-                                    title: 'Adherence',
+                                var optionsLifetime = {
+                                    title: 'Adherence, Lifetime',
                                     pieHole: 0.4,
                                 };
 
-                                chart.draw(dataTable, options);
+                                var options24 = {
+                                    title: 'Adherence, Last 24 Hours',
+                                    pieHole: 0.4,
+                                };
+
+
+                                chartLifetime.draw(dataTableLifetime, optionsLifetime);
+                                chart24.draw(dataTable24, options24);
                             }
                         </script>
                     </li>
