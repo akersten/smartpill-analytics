@@ -2,8 +2,8 @@ SELECT_ACCOUNT_BY_EMAIL = """
     SELECT * FROM accounts WHERE email = ?
 """
 
-SELECT_ACCOUNT_EMAIL_BY_ID = """
-    SELECT email FROM accounts WHERE id = ?
+SELECT_PATIENT_NAME_BY_ID = """
+    SELECT name FROM accounts WHERE id = ?
 """
 
 SELECT_PATIENTS_BY_CAREGIVER_EMAIL = """

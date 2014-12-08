@@ -338,7 +338,7 @@ def prescribe():
         cur = g.db.execute(queries.SELECT_PRESCRIPTION_ID_BY_PATIENT_ID_AND_PRESCRIPTION_NAME, (patientId, prescriptionName))
         prescriptionId = cur.fetchall()[0][0]
 
-        cur = g.db.execute(queries.SELECT_ACCOUNT_EMAIL_BY_ID, (patientId,))
+        cur = g.db.execute(queries.SELECT_PATIENT_NAME_BY_ID, (patientId,))
         patientName = cur.fetchall()[0][0]
 
         x = startTimestamp
