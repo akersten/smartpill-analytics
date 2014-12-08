@@ -257,14 +257,19 @@ def take():
     # TODO: Okay, the sanity checking ends here. Make sure you're providing 'name', 'timestamp', 'taken' fields
     print('User ' + username + ' just told us:')
     for i in items:
-        print('\tDose of ' + i.get('name') + ' at ' + str(i.get('doseTime')) + ' - taken: ' + str(i.get('taken')) + ' actual time: ' + str(i.get('actualTime')))
+        cur = g.db.execute(queries.SELECT_PATIENT_ID_BY_FULLNAME, (username,))
+        patientId = cur.fetchall()[0][0]
+        cur = g.db.execute(queries.SELECT_PRESCRIPTION_ID_BY_PATIENT_ID_AND_PRESCRIPTION_NAME, (patientId, i.get('name')))
+        prescriptionId = cur.fetchall()[0][0]
+
+        print('\tDose of ' + i.get('name') + ' at ' + str(i.get('doseTime')) + ' - taken: ' + str(i.get('taken')) + ' actual time: ' + str(i.get('actualTime')) + ' PRESCRIPTION ID: ' + str(prescriptionId))
 
         # Two cases - ether the dose time is known and we're retroactively setting one, or we have to estmate based
         # on the actualTime (i.e. doseTime is 0.)
 
         if (i.get('doseTime') != 0):
             print('\t\tDose time known, updating the actualTime and taken.')
-            g.db.execute(queries.UPDATE_ACTUAL_TIME_AND_TAKEN_BY_DOSE_TIME, (i.get('actualTime'), i.get('taken'), i.get('doseTime')))
+            g.db.execute(queries.UPDATE_ACTUAL_TIME_AND_TAKEN_BY_DOSE_TIME_AND_PRESCRIPTION_ID, (i.get('actualTime'), i.get('taken'), i.get('doseTime'), prescriptionId))
             g.db.commit()
             continue
 
@@ -294,7 +299,7 @@ def take():
             continue
         print(bestEntry)
         print('\t\tUpdating dose at ' + str(bestEntry.get('time')) + ', setting taken = ' + str(i.get('taken')))
-        g.db.execute(queries.UPDATE_ACTUAL_TIME_AND_TAKEN_BY_DOSE_TIME, (i.get('actualTime'), i.get('taken'), bestEntry.get('time')));
+        g.db.execute(queries.UPDATE_ACTUAL_TIME_AND_TAKEN_BY_DOSE_TIME_AND_PRESCRIPTION_ID, (i.get('actualTime'), i.get('taken'), bestEntry.get('time'), prescriptionId));
         g.db.commit()
     return jsonify({'success': True, 'error': 'Ok.'})
 

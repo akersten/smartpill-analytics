@@ -6,6 +6,10 @@ SELECT_PATIENT_NAME_BY_ID = """
     SELECT name FROM accounts WHERE id = ?
 """
 
+SELECT_PATIENT_ID_BY_FULLNAME = """
+    SELECT id FROM accounts WHERE name=?
+"""
+
 SELECT_PATIENTS_BY_CAREGIVER_EMAIL = """
     SELECT * FROM accounts WHERE id IN (SELECT patientId FROM careRelations WHERE caregiverId = (SELECT id FROM accounts WHERE email=?))
 """
@@ -64,10 +68,10 @@ DELETE_DOSES = """
     WHERE prescriptionId = ?
 """
 
-UPDATE_ACTUAL_TIME_AND_TAKEN_BY_DOSE_TIME = """
+UPDATE_ACTUAL_TIME_AND_TAKEN_BY_DOSE_TIME_AND_PRESCRIPTION_ID = """
     UPDATE doses
     SET actualTime=?, taken=?
-    WHERE time=?
+    WHERE time=? AND prescriptionId = ?
 """
 
 SELECT_PRESCRIPTIONS_BY_PATIENT_EMAIL = """
