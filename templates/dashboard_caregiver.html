@@ -32,6 +32,7 @@
             {% endif %}
         {% endwith %}
 
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
     <h2>My Patients and Prescriptions</h2>
     <p>
@@ -47,6 +48,8 @@
             $('#addPrescriptionModalTitle').html('Add Prescription for ' + targetName);
             $('#inputTarget').val(targetPatient);
         }
+
+        google.load("visualization", "1.1", {packages:["corechart"]});
     </script>
 
     {% if patients %}
@@ -77,6 +80,40 @@
                                 <button class="btn btn-xs btn-default">Remove</button>
                             </form>
                         </span>
+                        <br /><br />
+                        <div id="calendar_patient_{{ patient[0] }}_{{ scrip[0] }}" style="width: 50%; height: 350px;">
+                            hi~
+                        </div>
+
+                        <script>
+                            google.setOnLoadCallback(drawChartForPatient_{{ patient[0] }}_{{ scrip[0] }});
+
+                            function drawChartForPatient_{{ patient[0] }}_{{ scrip[0] }}()
+                            {
+                                var dataTable = new google.visualization.arrayToDataTable([
+                                    ['Dose', 'Status'],
+                                    {% for dose in doseInformation %}
+                                        {% if dose[2] == scrip[0] %}
+                                            {% if dose[1]|string == '1' %}
+                                                ['Taken', {{ dose[0] }}],
+                                            {% else %}
+                                                ['Missed', {{ dose[0] }}],
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                ]);
+
+
+                                var chart = new google.visualization.PieChart(document.getElementById('calendar_patient_{{ patient[0] }}_{{ scrip[0] }}'));
+
+                                var options = {
+                                    title: 'Adherence',
+                                    pieHole: 0.4,
+                                };
+
+                                chart.draw(dataTable, options);
+                            }
+                        </script>
                     </li>
                     {% endif %}
                 {% endfor %}
@@ -93,13 +130,13 @@
 
         <!--
 
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
 
          <script type="text/javascript">
       google.load("visualization", "1.1", {packages:["calendar"]});
       google.setOnLoadCallback(drawChart);
 
-   function drawChart() {
+   function drawChartForPatient() {
        var dataTable = new google.visualization.DataTable();
        dataTable.addColumn({ type: 'date', id: 'Date' });
        dataTable.addColumn({ type: 'number', id: 'Won/Loss' });

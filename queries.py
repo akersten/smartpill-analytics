@@ -26,6 +26,10 @@ SELECT_DOSES_BY_TIME_BETWEEN = """
     SELECT * FROM doses WHERE patientName = ? AND time > ? AND time < ?
 """
 
+SELECT_DOSE_TAKEN_GROUP_BY_PRESCRIPTION_ID = """
+    SELECT COUNT(id), taken, prescriptionId FROM doses GROUP BY prescriptionId, taken
+"""
+
 SELECT_PRESCRIPTION_ID_BY_PATIENT_ID_AND_PRESCRIPTION_NAME = """
     SELECT id FROM prescriptions
     WHERE patient = ? AND prescriptionName = ?
