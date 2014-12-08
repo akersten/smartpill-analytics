@@ -53,12 +53,12 @@
                 {% if dose[2] == prescriptionName %}
                     {% if dose[5]|string == '1' %}
                         <tr>
-                            <td>{{ dose[3] }}</td>
-                            <td>At {{ dose[4] }}</td>
+                            <td>{{ dose[7] }}</td>
+                            <td>At {{ dose[8] }}</td>
                         </tr>
                     {% else %}
                         <tr style="background-color: #eebbbb">
-                            <td>{{ dose[3] }}</td>
+                            <td>{{ dose[7] }}</td>
                             <td>No</td>
                         </tr>
                     {% endif %}

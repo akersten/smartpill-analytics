@@ -217,8 +217,15 @@ def dashboard():
 def forecast(username, prescriptionName, time):
     cur = g.db.execute(queries.SELECT_DOSES_BY_TIME_BETWEEN, (username, int(time) - 86400, int(time) + 86400))
     doses = cur.fetchall()
-    print(doses)
-    return render_template('forecast.html', username=username, prescriptionName=prescriptionName, time=time, doses=doses, p24=int(time)-86400, n24=int(time)+86400)
+    realDoses = []
+    for d in doses:
+        d += (datetime.datetime.fromtimestamp(int(d[3])).strftime('%Y-%m-%d %H:%M:%S'),)
+        print(d)
+        if int(d[5]) == 1:
+            d += (datetime.datetime.fromtimestamp(int(d[4])).strftime('%Y-%m-%d %H:%M:%S'),)
+        realDoses.append(d)
+    print(realDoses)
+    return render_template('forecast.html', username=username, prescriptionName=prescriptionName, time=time, doses=realDoses, p24=int(time)-86400, n24=int(time)+86400)
 
 
 #
