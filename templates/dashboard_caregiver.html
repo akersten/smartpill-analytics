@@ -67,7 +67,7 @@
                     {% if scrip[2] == patient[0] %}
                     <li style="margin-left: 3em;">
                         <h4>
-                            <span class="glyphicon glyphicon-share-alt" style="color: #440000; float: left; margin-left: -1em;"> </span><strong>{{ scrip[1] }}</strong> every
+                            <span class="glyphicon glyphicon-share-alt" style="color: #440000; float: left; margin-left: -1em;"> </span><strong><a href="/dashboard/forecast/{{patient[1]}}/{{scrip[1]}}/{{currentTime}}">{{ scrip[1] }}</a></strong> every
                             {% if scrip[5] > 1 %}
                                 <strong>{{ scrip[5] }}</strong> hours
                             {% else %}
@@ -159,55 +159,6 @@
     <p>You don't have any patients!</p>
     {% endif %}
 
-
-
-        <!--
-
-
-
-         <script type="text/javascript">
-      google.load("visualization", "1.1", {packages:["calendar"]});
-      google.setOnLoadCallback(drawChart);
-
-   function drawChartForPatient() {
-       var dataTable = new google.visualization.DataTable();
-       dataTable.addColumn({ type: 'date', id: 'Date' });
-       dataTable.addColumn({ type: 'number', id: 'Won/Loss' });
-       dataTable.addRows([
-          [ new Date(2012, 3, 13), 1 ],
-          [ new Date(2012, 3, 14), 1 ],
-          [ new Date(2012, 3, 15), 1 ],
-          [ new Date(2012, 3, 16), 1 ],
-          [ new Date(2012, 3, 17), 1 ],
-          // Many rows omitted for brevity.
-          [ new Date(2013, 9, 4), 8 ],
-          [ new Date(2013, 9, 5), 1 ],
-          [ new Date(2013, 9, 12), 1 ],
-          [ new Date(2013, 9, 13), 1 ],
-          [ new Date(2013, 9, 19), 1 ],
-          [ new Date(2013, 9, 23), 1 ],
-          [ new Date(2013, 9, 24), 1 ],
-          [ new Date(2013, 9, 30), 1 ],
-          [ new Date(2013, 10, 30), 0 ],
-               [ new Date(2014, 10, 30), 1 ]
-        ]);
-
-       var chart = new google.visualization.Calendar(document.getElementById('calendar_basic'));
-
-       var options = {
-         title: "Prescription Adherence",
-         height: 500,
-       };
-
-       chart.draw(dataTable, options);
-   }
-    </script>
-
-        <div id="calendar_basic">
-
-        </div>
-
--->
 
         <!-- MODAL ELEMENTS -->
         <!-- Modal for adding a patient -->

@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block body %}
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+           <h1 class="logo">Smartpill</h1>
+        </div>
+        <div class="col-md-10">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active">
+                    <a href="#">Forecast View</strong></a>
+                </li>
+                <li role="presentation">
+                    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+                </li>
+                <li role="presentation">
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <br /><br />
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-info" role="alert">
+                        <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+
+                        {% for message in messages %}
+                            {{ message }}<br />
+                        {% endfor %}
+                    </div>
+                    <br /><br />
+                {% endif %}
+            {% endwith %}
+
+
+        <h2>Forecast for <strong>{{ username }}</strong>'s regimen of <strong>{{ prescriptionName }}</strong></h2>
+
+        <div>
+            <a href="/dashboard/forecast/{{username}}/{{prescriptionName}}/{{p24}}" class="btn btn-default pull-left">&lt; Previous 24 Hours</a>
+            <a href="/dashboard/forecast/{{username}}/{{prescriptionName}}/{{n24}}" class="btn btn-default pull-right">Next 24 Hours &gt</a>
+            <br />
+            <br />
+        </div>
+
+        <table class="table table-hover">
+            <tr>
+                <th>Dose Time</th><th>Taken</th>
+            </tr>
+            {% for dose in doses %}
+                {% if dose[2] == prescriptionName %}
+                    {% if dose[5]|string == '1' %}
+                        <tr>
+                            <td>{{ dose[3] }}</td>
+                            <td>At {{ dose[4] }}</td>
+                        </tr>
+                    {% else %}
+                        <tr style="background-color: #eebbbb">
+                            <td>{{ dose[3] }}</td>
+                            <td>No</td>
+                        </tr>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}
